@@ -17,6 +17,7 @@ services:
 
   mysql_server:
     image: mysql:8.0
+    container_name: mysql_server
     volumes:
       - /opt/mysql:/var/lib/mysql
     environment:
