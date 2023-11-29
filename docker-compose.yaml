@@ -1,0 +1,29 @@
+version: '1'
+services:
+  dbmanager_server:
+    build: .
+    image: dbmanager
+    container_name: dbmanager_server
+    links:
+      - mysql_server
+    environment:
+      DB_HOST: mysql_server
+      DB_NAME: mydb
+      DB_USER: root
+      DB_PASSWORD: nevertellyou
+    depends_on:
+      mysql_server:
+        condition: service_healthy
+        restart: true
+
+  mysql_server:
+    image: mysql:8.0
+    volumes:
+      - /opt/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: nevertellyou
+      MYSQL_DATABASE: mydb
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
